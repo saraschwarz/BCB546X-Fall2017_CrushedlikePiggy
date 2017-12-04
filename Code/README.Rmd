@@ -1,4 +1,4 @@
-# Coding documentation should be done as follows:
+# Coding documentation in the order as follows:
   * Genotype_Table
   * PCA_Analysis
   * SNP_Positions
