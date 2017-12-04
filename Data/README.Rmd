@@ -1,12 +1,12 @@
 # Contents of data folder
 ## Information text file for boar and pig
-    * Boar_info.txt
-    * Pig_info.txt
+  * Boar_info.txt
+  * Pig_info.txt
     
 ## .map files for boar and pig data
-    * DG_Boar.map
-    * DG_Pig.map
+  * DG_Boar.map
+  * DG_Pig.map
     
 ## .ped files for boar and pig data
-    * DG_Boar.ped
-    * DG_Pig.ped
+  * DG_Boar.ped
+  * DG_Pig.ped
