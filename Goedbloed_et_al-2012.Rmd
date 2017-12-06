@@ -1,11 +1,11 @@
-# Genome-wide single nucleotide polymorphism analysis reveals recent genetic introgression from domestic pigs into Northwest Eurpean wild boar populations
+# Genome-wide single nucleotide polymorphism analysis reveals recent genetic introgression from domestic pigs into Northwest European wild boar populations
 ## D.J. Goedbloed, H.J. Megens, P. Van Hooft, J.M. Herrero-Medrano, W. Lutz, P. Alexandri, R.P.M.A Crooijmans, M. Groenen, S.E. Van Wieren, R.C. Ydenberg, H.H.T. Prins
 ## 26 June 2012
 
 ### Introduction
-#### European pigs have been domesticated from wild boar for thousands of years, however, hybridization is still possible. This is of conservation concern for wild boar because hybridized individuals may inherit maladaptive traits such as a reduce resistance to disease. Studies done on mitochondrial DNA and microsatellite data suggest that the genetic introgression between wild boar and domestic pigs is less than 5%. This study aimed to identify occurance, time frame, and possible sources of genetic introgression using a genome-wide single nucleotide polymorphism (SNP) analysis.
+#### Although European pigs have been domesticated from wild boar for thousands of years, hybridization is still possible. This is a conservation concern for European wild boar populations since hybridized individuals may inherit maladaptive traits such as a reduced resistance to disease. Studies done on mitochondrial DNA and microsatellite data suggest that the genetic introgression between wild boar and domestic pigs is less than 5%. This study aimed to identify occurance, time frame, and possible sources of genetic introgression using a genome-wide single nucleotide polymorphism (SNP) analysis.
 #### Data used for this study included are as follows:
-  * 88 wild boar samples
+  * 88 wild boar samples from Northwestern European
     * Netherlands
     * Luxembourg
     * Western parts of Germany
@@ -18,7 +18,7 @@
     * Tamworth
     
 #### Results
-##### This study found that despite pig farming practices being mostly indoors, there is a geographically wildspread presence of domestic pig SNPs in 10% of analyzed boar samples. This study also found that there were 9 wild boar individuals that either had levels of introgression equivalent to first-generation hybrids until fifth-generation backcrosses with wild boar (4 individuals fit this pattern) or were a result of interbreeding between other hybrids (5 individuals fit this pattern). Of the hybrid offspring, 3 individuals were associated with a different wild boar population than the ones sampled suggesting that genetic introgression was from potentially released or escaped domestic pigs that were already hybridized with wild boar populations. Overall, this study found that there was more genetic introgression from domestic pigs into wild boar populations recently and more common than was expected.
+##### This study found that despite pig farming practices being mostly indoors, there is a geographically wildspread presence of domestic pig SNPs in 10% of analyzed boar samples. Of the 88 wild boar samples, 9 individuals either had levels of introgression equivalent to first-generation hybrids until fifth-generation backcrosses with wild boar (4 individuals fit this pattern) or were a result of interbreeding between other hybrids (5 individuals fit this pattern). Out of the 5 individuals found classified as hybrid offspring, 3 individuals were associated with a different wild boar population than the ones sampled suggesting that genetic introgression was from potentially released or escaped domestic pigs that were already hybridized with wild boar populations. Overall, this study found that there was more genetic introgression from domestic pigs into wild boar populations recently and more common than was expected.
 ### Analysis replication
 #### Our analysis replication included:
   * Recreation of the genotype tables
