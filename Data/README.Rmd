@@ -1,6 +1,4 @@
 # Contents of data folder
-## Data inspection code
-  * Data_Inspection
   
 ## Information text file for boar and pig
   * Boar_info.txt

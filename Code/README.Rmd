@@ -1,4 +1,5 @@
 # Coding documentation in the order as follows:
+  * Data_Inspection
   * Genotype_Table
   * PCA_Analysis
   * SNP_Positions
