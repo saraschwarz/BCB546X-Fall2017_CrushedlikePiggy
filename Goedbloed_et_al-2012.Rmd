@@ -21,6 +21,6 @@
 ##### This study found that despite pig farming practices being mostly indoors, there is a geographically wildspread presence of domestic pig SNPs in 10% of analyzed boar samples. Of the 88 wild boar samples, 9 individuals either had levels of introgression equivalent to first-generation hybrids until fifth-generation backcrosses with wild boar (4 individuals fit this pattern) or were a result of interbreeding between other hybrids (5 individuals fit this pattern). Out of the 5 individuals found classified as hybrid offspring, 3 individuals were associated with a different wild boar population than the ones sampled suggesting that genetic introgression was from potentially released or escaped domestic pigs that were already hybridized with wild boar populations. Overall, this study found that there was more genetic introgression from domestic pigs into wild boar populations recently and more common than was expected.
 ### Analysis replication
 #### Our analysis replication included:
-  * Recreation of the genotype tables
-  * PCA analysis
-  * Chromosome position of SNPs found in the 4 wild boar individuals that showed first through fifth generation hybridization
+  1. Recreation of the genotype tables
+  2. PCA analysis
+  3. Chromosome position of SNPs found in the 4 wild boar individuals that showed first through fifth generation hybridization
