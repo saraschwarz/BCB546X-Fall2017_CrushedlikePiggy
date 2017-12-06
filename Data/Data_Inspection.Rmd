@@ -1,0 +1,43 @@
+# Data Inspection
+
+## Read in data
+```{r}
+DG_Boar.map <- read.table("DG_Boar.map", header = F, fill = T)
+DG_Boar.ped <- read.table("DG_Boar.ped", header = F, fill = T)
+DG_Pig.map <- read.table("DG_Pig.map", header = F, fill = T)
+DG_Pig.ped <- read.table("DG_Pig.ped", header = F, fill = T)
+```
+
+### DG_Boar.map
+```{r}
+typeof(DG_Boar.map)
+class(DG_Boar.map)
+str(DG_Boar.map)
+dim(DG_Boar.map)
+```
+
+### DG_Boar.ped
+```{r}
+typeof(DG_Boar.ped)
+class(DG_Boar.ped)
+str(DG_Boar.ped)
+dim(DG_Boar.ped)
+```
+
+### DG_Pig.map
+```{r}
+typeof(DG_Pig.map)
+class(DG_Pig.map)
+str(DG_Pig.map)
+dim(DG_Pig.map)
+```
+
+
+### DG_Pig.ped
+```{r}
+typeof(DG_Pig.ped)
+class(DG_Pig.ped)
+str(DG_Pig.ped)
+dim(DG_Pig.ped)
+```
+
