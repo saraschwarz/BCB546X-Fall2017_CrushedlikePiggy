@@ -10,6 +10,8 @@
   
 ## Data
   * README - summarizes contents of folder
+  * Data inspection code
+    * Data_Inspection
   * Information text file for boar and pig
     * Boar_info.txt
     * Pig_info.txt
