@@ -1,8 +1,9 @@
-# Coding documentation in the order as follows:
+# Code documentation should be run in the order as follows:
   1. Data_Inspection
-  2. Allele_Frequncies
-  3. PCA_Analysis
-  4. Cluster_Map
-  5. SNP_Positions
+  2. Plink
+  3. Allele_Frequncies
+  4. PCA_Analysis
+  5. Cluster_Map
+  6. SNP_Positions
 
   
