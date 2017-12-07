@@ -1,0 +1,83 @@
+---
+title: "Read PED and MAP files"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install the required packages for the project
+
+```{r}
+install.packages("devtools")
+library("devtools")
+source("https://bioconductor.org/biocLite.R")
+biocLite()
+biocLite("snpStats")
+biocLite("gdsfmt")
+biocLite("SNPRelate")
+install.packages("ggplot2")
+install.packages("adegenet")
+```
+
+## Read newly filtered PED and MAP files from PLINK
+
+```{r}
+library(snpStats)
+board_filtered_0.005 <- read.pedfile("Board.filtered.0.005.ped", snps="Board.filtered.0.005.map")
+board_filtered_0.005_genotypes <- as.data.frame(board_filtered_0.005$genotypes)
+board_filtered_0.05 <- read.pedfile("Board.filtered.0.05.ped", snps="Board.filtered.0.05.map")
+board_filtered_0.05_genotypes <- as.data.frame(board_filtered_0.05$genotypes)
+```
+
+## Get SNPs information
+
+```{r}
+snpsummary <- col.summary(board_filtered_0.005$genotypes)
+View(snpsummary)
+```
+
+## save genotypes as a Data Frame
+
+```{r}
+board_filtered_0.05_genotypes <- as.data.frame(board_filtered_0.05$genotypes)
+```
+
+## Extract hybrids genotypes
+
+```{r}
+hybrids <- c("HAPMAP2_box5_G9_SSWB21U63", "HAPMAP2_box5_H10_SSWB21U72",	"HAPmap5_box5_F7_SSWB22F06",	"HAPmap5_box5_B8_SSWB22F07", "HAPmap5_box5_B9_SSWB22F08",	"HAPmap5_box5_H8_SSWB22M07",	"HAPmap5_box5_F9_SSWB41F02", "HAPmap5_box5_D9_SSWB41M05", "HAPmap5_box5_D8_SSWB41U31")
+hyb_genotypes <- subset(board_filtered_0.05_genotypes, rownames(board_filtered_0.05_genotypes) %in% hybrids)
+View(hyb_genotypes)
+```
+
+## Remove hybrids from genotypes dataframe
+
+```{r}
+no_hyb_genotypes <- subset(board_filtered_0.05_genotypes, !rownames(board_filtered_0.05_genotypes) %in% hybrids)
+View(no_hyb_genotypes)
+```
+
+
+## Remove hybrids from SnpMatrix object
+
+```{r}
+rownames(board_filtered_0.05$genotypes)
+board_filtered_0.05$genotypes <- board_filtered_0.05$genotypes[!rownames(board_filtered_0.05_genotypes) %in% hybrids]
+dim(board_filtered_0.05$genotypes)
+col.summary(board_filtered_0.05$genotypes)
+```
+
+## Combine genotypes
+
+```{r}
+pig <- read.pedfile("Pig.filtered.0.05.ped", snps="Pig.filtered.0.05.map")
+rownames(pig$genotypes)
+pig_genotypes <- as.data.frame(pig$genotypes)
+pig_subset <- c("HAPmap3_box1_E5_BS01_M44", "HAPmap6_box1E5_SSBS01F15",	"WG0093134-DNAH12_SSDU20M09",	"HAPMAP2_box6_H3_SSDU20M11", "WG0093136-DNAA01_SSDU23M01",	"HAPmap3_box3_G5_LW31_B3151",	"HAPMAP2_box3_B11_GBSSSTA01F04", "WG0093133-DNAD12_SSPI22M02", "HAPMAP2_box5_D5_GBSSSTA01M34")
+pig_subset_genotypes <- subset(pig_genotypes, rownames(pig_genotypes) %in% pig_subset)
+cols <- intersect(colnames(board_filtered_0.05_genotypes), colnames(pig_subset_genotypes))
+all_genotypes <- rbind(board_filtered_0.05_genotypes[,cols], pig_subset_genotypes[,cols])
+```
+
