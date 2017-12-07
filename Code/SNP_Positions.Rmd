@@ -1,0 +1,143 @@
+---
+title: "Read PED and MAP files"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install the required packages for the project
+
+```{r}
+install.packages("devtools")
+library("devtools")
+source("https://bioconductor.org/biocLite.R")
+biocLite()
+biocLite("snpStats")
+biocLite("gdsfmt")
+biocLite("SNPRelate")
+install.packages("ggplot2")
+install.packages("adegenet")
+```
+
+## Read newly filtered PED and MAP files from PLINK
+
+```{r}
+library(snpStats)
+Boar0.005 <- read.pedfile("Board.filtered.0.005.ped", snps="Board.filtered.0.005.map")
+Boar0.005_genotypes <- as.data.frame(board_filtered_0.005$genotypes)
+Boar0.05 <- read.pedfile("Board.filtered.0.05.ped", snps="Board.filtered.0.05.map")
+Board0.05_genotypes <- as.data.frame(board_filtered_0.05$genotypes)
+```
+
+## Get SNPs information
+
+```{r}
+snpsummary <- col.summary(Boar0.005$genotypes)
+View(snpsummary)
+```
+
+## save genotypes as a Data Frame
+
+```{r}
+Boar0.05_genotypes <- as.data.frame(Boar0.05$genotypes)
+```
+
+## Extract 4 hybrids genotypes
+
+```{r}
+hybrids <- c("HAPMAP2_box5_G9_SSWB21U63","HAPmap5_box5_F7_SSWB22F06","HAPmap5_box5_B8_SSWB22F07","HAPmap5_box5_D9_SSWB41M05")
+hyb_genotypes <- subset(Boar0.05_genotypes, rownames(Boar0.05_genotypes) %in% hybrids)
+View(hyb_genotypes)
+```
+
+## Remove hybrids from genotypes
+
+```{r}
+no_hyb_genotypes <- subset(Boar0.05_genotypes, !rownames(Boar0.05_genotypes) %in% hybrids)
+View(no_hyb_genotypes)
+```
+
+## Create vector for 4 hybrids
+
+```{r}
+hyb1 <- hyb_genotypes["HAPMAP2_box5_G9_SSWB21U63", ]
+hyb2 <- hyb_genotypes["HAPmap5_box5_B8_SSWB22F07", ]
+hyb5 <- hyb_genotypes["HAPmap5_box5_F7_SSWB22F06", ]
+hyb7 <- hyb_genotypes["HAPmap5_box5_D9_SSWB41M05", ]
+```
+
+
+
+```{r}
+library(plyr)
+```
+
+## Write for-loop to count 01 and 03 in each allele and print 01 or 03 if it is the minor allele
+
+```{r}
+genotype <- 0
+snp <- 0
+genotypes <- as.data.frame(Boar0.005_genotypes)
+x <- colnames(genotypes)
+minorallele <- colnames(Boar0.005_genotypes)
+
+for (i in genotypes){
+  count(genotypes):
+  if(count(01 < 03)) print "01" to minorallele$i
+  if(count(03 < 01)) print "03" to minorallele$i
+}
+  
+```
+
+## Attempt at separating out genotypes first?? Nucleotide formattin
+
+```{r}
+snp_ <- 0
+for(i in genotypes){
+   snp_[i] <- print(i)
+ } 
+```
+
+
+
+## Compare per individual, if minor allele is matched print 1, if no match, print 0 OR record column name into new vector
+
+```{r}
+
+rbind(minorallele, hyb(1,2,5,7))
+if both values in column are equal, record column name into hyb(1,2,5,7)allele
+
+```
+
+##  Grep out mapping information from Boar0.005$map based off of new vector
+
+```{r}
+hybrid(1,2,5,7)map <- Boar0.005[grep(hyb(1,2,5,7)allele, Boar0.005$map)
+```
+
+## Plot SNP position per chromosome per individual
+
+
+
+
+x <- c(2,5,3,9,8,11,6)
+count <- 0
+for (val in x) {
+    if(val %% 2 == 0)  count = count+1
+}
+print(count)
+
+Create vector for the four hybrids
+Across all indivudals: identify minor allele by writing a vector to count the 01 and 03, want another vector that determines minor allele, if 01 < 03, then populate with 01, which will create the minor allele. 
+Once you have that vector, compare or pull out number of snps that have minor allele
+Create new vector per indivudual, if you match minor allele print 1, print 0 if doesnt. 
+
+implementation: involves if and else statement and for loop
+
+Hybrids 1,2,5,7
+1: HAPMAP2_box5_G9_SSWB21U63
+2: HAPmap5_box5_B8_SSWB22F07
+5: HAPmap5_box5_F7_SSWB22F06
+7: HAPmap5_box5_D9_SSWB41M05
