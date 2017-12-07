@@ -1,6 +1,6 @@
 # Coding documentation in the order as follows:
   1. Data_Inspection
-  2. Genotype_Table
+  2. Allele_Frequncies
   3. PCA_Analysis
   4. SNP_Positions
 
