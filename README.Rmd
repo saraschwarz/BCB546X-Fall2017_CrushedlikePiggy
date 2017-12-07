@@ -6,8 +6,9 @@
   * README - summarizes contents of folder
   * Data inspection code
     * Data_Inspection
-  * Genotype_Table - The number of putative introgressed single nucleotide polymorphisms (SNPs), observed heterozygosity (Ho) based on 26505 SNPs with MAF>0.05 and mtDNA haplotype per individual hybrid wild boar.
-  * PCA_Analysis - Principal component analysis (PCA) plot based on 26505 single nucleotide polymorphisms (SNPs) with MAF>0.05. One shows grouping of 4 wild boar populations interposed with 9 introgressed indviduals. The second PCA includes a sample of all six domestic pig breeds.
+  * Allele_Frequencies - Minor allele frequency (MAF) distribution of wild boar data set, wild boar data set without the 9 hybrids, and the domestic pig data set.
+  * PCA_Analysis - Principal component analysis (PCA) plot based on filtered boar data set. The second PCA includes a sample of all six domestic pig breeds.
+  * Cluster_Map - Map of clustered wild boar individuals.
   * SNP_Positions - Chromosome positions of introgressed SNPs across 4 different levels of hybridization.
   
 ## Data

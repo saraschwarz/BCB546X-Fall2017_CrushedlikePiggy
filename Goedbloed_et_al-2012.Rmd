@@ -24,4 +24,5 @@
 #### Our analysis replication included:
   1. Allele frequency figures
   2. PCA analysis
-  3. Chromosome position of SNPs found in the 4 wild boar individuals that showed first through fifth generation hybridization
+  3. Map of clustered of wild boar individuals
+  4. Chromosome position of SNPs found in the 4 wild boar individuals that showed first through fifth generation hybridization
