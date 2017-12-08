@@ -33,9 +33,9 @@ biocLite("snpStats")
 ```{r}
 library(snpStats)
 board_filtered_0.005 <- read.pedfile("Board.filtered.0.005.ped", snps="Board.filtered.0.005.map")
-board_filtered_0.005_genotypes <- as.data.frame(board_filtered_0.005$genotypes)
+board_filtered_0.005_genotypes <- as.data.frame(board_filtered_0.005$genotypes) # Save genotypes as a Data Frame
 board_filtered_0.05 <- read.pedfile("Board.filtered.0.05.ped", snps="Board.filtered.0.05.map")
-board_filtered_0.05_genotypes <- as.data.frame(board_filtered_0.05$genotypes)
+board_filtered_0.05_genotypes <- as.data.frame(board_filtered_0.05$genotypes) # Save genotypes as a Data Frame
 ```
 
 ## Get SNPs information
@@ -43,12 +43,6 @@ board_filtered_0.05_genotypes <- as.data.frame(board_filtered_0.05$genotypes)
 ```{r}
 snpsummary <- col.summary(board_filtered_0.005$genotypes)
 View(snpsummary)
-```
-
-## save genotypes as a Data Frame
-
-```{r}
-board_filtered_0.05_genotypes <- as.data.frame(board_filtered_0.05$genotypes)
 ```
 
 ## Extract hybrids genotypes
@@ -76,13 +70,13 @@ dim(board_filtered_0.05$genotypes)
 col.summary(board_filtered_0.05$genotypes)
 ```
 
-## Combine genotypes
+## Combine genotypes with randomly picked Pig genotypes
 
 ```{r}
 pig <- read.pedfile("Pig.filtered.0.05.ped", snps="Pig.filtered.0.05.map")
 rownames(pig$genotypes)
 pig_genotypes <- as.data.frame(pig$genotypes)
-pig_subset <- c("HAPmap3_box1_E5_BS01_M44", "HAPmap6_box1E5_SSBS01F15",	"WG0093134-DNAH12_SSDU20M09",	"HAPMAP2_box6_H3_SSDU20M11", "WG0093136-DNAA01_SSDU23M01",	"HAPmap3_box3_G5_LW31_B3151",	"HAPMAP2_box3_B11_GBSSSTA01F04", "WG0093133-DNAD12_SSPI22M02", "HAPMAP2_box5_D5_GBSSSTA01M34")
+pig_subset <- c("HAPmap3_box1_E5_BS01_M44", "HAPmap6_box1E5_SSBS01F15",	"WG0093134-DNAH12_SSDU20M09",	"HAPMAP2_box6_H3_SSDU20M11", "WG0093136-DNAA01_SSDU23M01",	"HAPmap3_box3_G5_LW31_B3151",	"HAPMAP2_box3_B11_GBSSSTA01F04", "WG0093133-DNAD12_SSPI22M02", "HAPMAP2_box5_D5_GBSSSTA01M34") # The study doesn't tell which pigs were selected, we picked 1 for each breed.
 pig_subset_genotypes <- subset(pig_genotypes, rownames(pig_genotypes) %in% pig_subset)
 cols <- intersect(colnames(board_filtered_0.05_genotypes), colnames(pig_subset_genotypes))
 all_genotypes <- rbind(board_filtered_0.05_genotypes[,cols], pig_subset_genotypes[,cols])
