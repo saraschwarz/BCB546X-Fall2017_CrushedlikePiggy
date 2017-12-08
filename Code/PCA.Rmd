@@ -1,11 +1,3 @@
----
-title: "PCA"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # The pupose of this script is to recreate the PCAs to visualize the boards, pigs, hybrids and PCA genetic structure on a figure. The authors chosed to run PCAs with a pearl script implemented in EIGENSOFT 3.0 (Price et al. 2006). As the pearl script didn't perform well, the documentation rare and as R users we chose to perform PCAs with the R package adegenet.
 

@@ -1,4 +1,5 @@
-# Code documentation should be run in the order as follows:
+# This folder contains code documentation that can be used to run analyses outlined in the selected paper.
+## Code documentation should be run in the order as follows:
   1. Data_Inspection
   2. plink.sh
   3. snpStats
