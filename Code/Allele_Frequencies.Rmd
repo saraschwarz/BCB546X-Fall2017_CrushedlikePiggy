@@ -1,4 +1,5 @@
-# Packages 
+
+#  Packages  
 ```{r}
 library(ggplot2)
 library(snpStats)
@@ -10,23 +11,24 @@ library(dplyr)
 library(plink)
 library(SNPRelate)
 ```
-# Loading and reading in the data. We read this data onto hpc class which had the plink module we were to use for downstream analysis.
 
+### Loading and reading in the data. We read this data onto hpc class which had the plink module we were to use for downstream analysis. This was all in unix
 ```{}
 $ wget http://datadryad.org/bitstream/handle/10255/dryad.39555/DG_Pig.ped
 $ wget http://datadryad.org/bitstream/handle/10255/dryad.39556/DG_Pig.map 
 $ wget http://datadryad.org/bitstream/handle/10255/dryad.39556/DG_Boar.map 
 $ wget http://datadryad.org/bitstream/handle/10255/dryad.39556/DG_Boar.ped 
-```
-# Description of file formats
 
+```
+
+### Description of file formats
 ```{}
 The prefered file formats to work in Plink are text files with endings .ped (and .map), and the smaller binary PLINK files with endings .bed (+ .bim + .fam).
 
 In PLINK, the input data file is split in 2 (or 3) files, each containing solely information on either genotypes and sample information (.ped), only genotypes (.bed), variant positions and information (.map / .bim), or sample information (.fam).
 ```
-#1. Ped file
 
+#### 1. Ped file
 ```{}
 The .ped file contains the variant information with one allele per column (meaning 2 columns are needed for the two alleles of one variant). It has one line per sample with the first six columns being:
 1 Family ID
@@ -38,18 +40,19 @@ The .ped file contains the variant information with one allele per column (meani
 
 7-n The seventh and eighth columns are the alleles for the first variant, the second variant, etc. Missing data is coded as 0 (or -9).
 ```
-#2 .map_file
 
+#### 2 .map_file
 ```{}
 The .map file contains the variant positions. It has 4 columns:
-1 Chromosome code. PLINK 1.9 also permits contig or scaffold names here, but most older versions do not.
+1 Chromosome code
 2 Variant identifier
 3 Position in morgans or centimorgans (optional; ‘0’ = unknown)
 4 Chromosome position in bp
 ```
-# Quick data inspection to know the file sizes and snp info.
-# 1. Length
 
+## Quick data inspection to know the file sizes and snp info.
+
+#### 1. Length
 ```{}
 $ wc -l DG_Boar.ped DG_Boar.map DG_Pig.ped DG_Pig.map
 88 DG_Boar.ped
@@ -58,8 +61,8 @@ $ wc -l DG_Boar.ped DG_Boar.map DG_Pig.ped DG_Pig.map
 45720 DG_Pig.map
 The data was correctly read into plink and corresponded to the 88 Boar and 120 Pig breeds that were genotypes. In both, 45720 autosomal snps were analyzed.
 ```
-# Size
 
+#### 2. Size
 ```{}
 $ du -h DG_Boar.map  DG_Boar.ped DG_Pig.map  DG_Pig.ped 
 1.2M	DG_Boar.map
@@ -68,13 +71,13 @@ $ du -h DG_Boar.map  DG_Boar.ped DG_Pig.map  DG_Pig.ped
 27M	DG_Pig.ped
 #This was true since 120 pig breeds were genotyped and only 88 of the Boar
 ```
-# Data formating to remove rare alleles that were poorly genotyped, Filtering based on MAF. This was done using the plink manual on hpc class.
 
+### Data formating to remove rare alleles that were poorly genotyped, Filtering based on MAF. This was done using the plink manual on hpc class.
 ```{}
 Filtering on MAF can be done for multiple reasons but for this paper was to remove noise in samples sequenced with low coverage.
 ```
-# 1. Filtering to get highly abundant rare SNPs using  0.005 < MAF <0.030 threshold. This returned compressed .map, .ped and .fam files which are easy to work with
 
+### 1. Filtering to get highly abundant rare SNPs using  0.005 < MAF <0.030 threshold. This returned compressed .map, .ped and .fam files which are small size files to export to R
 ```{}
 $ plink --ped DG_Boar.ped --map DG_Boar.map --recode --maf 0.005 --max-maf 0.03 --out Boar_filtered.0.005
 $ wc -l Boar_filtered.0.005.log Boar_filtered.0.005.map Boar_filtered.0.005.ped
@@ -82,8 +85,8 @@ $ wc -l Boar_filtered.0.005.log Boar_filtered.0.005.map Boar_filtered.0.005.ped
  88 Boar_filtered.0.005.ped
 #Note; The paper found 7083 highly abundant rare SNPs in the wild boardata set where as we found 9287 which was 2204 more.
 ````
-#2. After allele frequency spectrum assessment, they excluded nonpolymorphic sites and potential genotyp-ing errors by applying a rigorous MAF threshold of 0.05 using PLINK, as a standard procedure. This left 26505 segregating autosomal SNPs although we found a different result ~2000 SNPs more
 
+### 2. After allele frequency spectrum assessment, they excluded nonpolymorphic sites and potential genotyp-ing errors by applying a rigorous MAF threshold of 0.05 using PLINK, as a standard procedure. This left 26505 segregating autosomal SNPs although we found a different result ~2000 SNPs more
 ```{}
 $ plink --ped DG_Boar.ped --map DG_Boar.map --maf 0.05 --recode --out Boar_filter
 45720 variants loaded from .bim file.
@@ -94,46 +97,47 @@ Total genotyping rate is 0.986513.
 28060 variants and 88 people pass filters and QC.
 #This returned .map and .ped files which we imported in R for analysis.
 ```
-# Transfer files from remote host to be read in R for analysis. We applied the scp -r command
 
+### Transfer files from remote host to be read in R for analysis. We applied the scp -r command 
 ```{}
 $ scp -r ensamba@hpc-class.its.iastate.edu:/home/ensamba/Data/Boar_filtered /Users/ensamba/Downloads
 #We were unable to analyze data using the plink software because there wasn't enough memory to run the pipe lines.
 ```
-# Reading the data in R using the snpstats package of bioconducter which reads .ped and .map files and merge them together.
 
-```{r}
-#The plink data can be read in R usind the  read.pedfile, from snpStats. The information of the .ped file can be thought of as a combination of the .bed and .fam files. The .map file contains the first four columns of the .bim file, without the allele assignments.
+### Reading the data in R using the snpstats package of bioconducter which reads .ped and .map files and merge them together. 
+```{}
+The plink data can be read in R usind the  read.pedfile, from snpStats. The information of the .ped file can be thought of as a combination of the .bed and .fam files. The .map file contains the first four columns of the .bim file, without the allele assignments.
 ```
-# Read into the Boar_data to calculate MAF distribution
 
+### Read the Boar_data in R to calculate MAF distribution 
 ```{r}
 New_Boar <- read.pedfile("Boar.0.05.ped", snps = "Boar.0.05.map")
-# This returned an object containing an genotype member of type SnpMatrix where each column is a SNP and each row is a sample.
+#This returned an object containing an genotype member of type SnpMatrix where each column is a SNP and each row is a sample.
 ```
 
-#Extract Genotype info from a snpmatrix object
+### Extract Genotype info from a snpmatrix object 
 ```{r}
- New_Boar.genotypes <- New_Boar$genotypes
- dim(New_Boar.genotypes)
-[1]  88 42157
- #New_Boar.genotypes:Within this object individual genotypes are assigned in the SnpMatrix specific RAW format. 
-[1]  42157 SNPs were read for 88 boar individuals.
- #Wrote this to a file and exported it out of R
-  write.table(New_Boar.genotypes, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/New_Boar.genotypes.txt", sep="\t", col.names=F, row.names=F)
+New_Boar.genotypes <- New_Boar$genotypes
+dim(New_Boar.genotypes)
+88 42157
+#New_Boar.genotypes:Within this object individual genotypes are assigned in the SnpMatrix specific RAW format. 
+42157 SNPs were read for 88 boar individuals.
+#Wrote this to a file and exported it out of R
+write.table(New_Boar.genotypes, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/New_Boar.genotypes.txt", sep="\t", col.names=F, row.names=F)
 ```
-# Obtain SNP info from the New_Boar list
 
+### Obtain SNP info from the New_Boar list 
 ```{r}
 Boar_snp_info <- New_Boar$map
 colnames(Boar_snp_info)
 ```
-# Create SNP summary statistics
+
+### Create SNP summary statistics 
 ```{r}
-#snpStats provides functions, col.summary and row.summary, that return statistics on SNPs and samples, respectively. For example, to calculate summary statistics for each SNP (column): I employed the col.summary function of snpstats as below
+# snpStats provides functions, col.summary and row.summary, that return statistics on SNPs and samples, respectively. For example, to calculate summary statistics for each SNP (column): I employed the col.summary function of snpstats as below
 New_Boar_snp_summary <- col.summary(New_Boar.genotypes)
 write.table(New_Boar_snp_summary, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/New_Boar_snp_summary.txt", sep="\t", col.names=T, row.names=F)
-#The col.summary returns a data frame with rows corresponding to columns of the input object and with columns/elements
+# The col.summary returns a data frame with rows corresponding to columns of the input object and with columns/elements
 ```
 Calls: The number of valid calls
 Call.rate: The proportion of genotypes called
@@ -144,18 +148,18 @@ P.AA: The frequency of homozygous genotype 1 (A/A)
 P.AB: The frequency of heterozygous genotype 2 (A/B)
 P.BB: The frequency of homozygous genotype 3 (B/B)
 z.HWE: A z-test for Hardy-Weinberg equilibrium
-```{}
-I was most interested in the MAF, so I subset it out for downstream analysis to calculate the MAF classes and their frequencies based on the total number of snps present.
+```{r}
+# I was most interested in the MAF, so I subset it out for downstream analysis to calculate the MAF classes and their frequencies based on the total number of snps present.
 ```
-# Subset only the MAF from the col.summary statistics and convert it to a data frame
 
+### Subset only the MAF from the col.summary statistics and convert it to a data frame 
 ```{r}
 New_Boar_MAF_class <- as.data.frame(New_Boar_snp_summary$MAF)
 view(New_Boar_MAF_class)
 # The dataframe contains only the MAF of the SNP ids
 ```
-# Setting bins to estimate MAF classes used to generate MAF distribution tables
 
+### Setting bins to estimate MAF classes used to generate MAF distribution tables 
 ```{r}
 br = seq(0.005,0.505,by=0.01)
 ranges = paste(head(br,-1), br[-1], sep=" - ")
@@ -164,8 +168,8 @@ New_MAF_Boar = data.frame(range=ranges, frequency = freq$counts)
 #Ranges corresponded to MAF classes and freq returns counts for each class.
 sum(New_Boar_MAF_class$`New_Boar_snp_summary$MAF`) of all counts
 ```
-# Calculating relative frequency of each MAF class
 
+### Calculating relative frequency of each MAF class 
 ```{r}
 # Using the dplyer library function to add another column (Relative frequency) by mutating. The relative frequency indicates the frequency of each MAF class relative to the total number of singlenucleotide polymorphisms in the dataset.
 New_MAF_Boar_df <-tbl_df(New_MAF_Boar)
@@ -174,36 +178,37 @@ View(New_MAF_Boar_df)
 #First converted the dataframe to a dplyr and mutated it by adding another column, relative frequency.
 write.table(New_MAF_Boar_df, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/New_MAF_Boar_df.txt", sep="\t", col.names=T, row.names=F)
 ```
-# Plotting the MAF class distribution in the Boar dataset
 
+### Plotting the MAF class distribution in the Boar dataset 
 ```{r}
 ggplot(data = New_MAF_Boar_df[-50,], aes(x=range, y=Relative_frequency)) + geom_bar(stat = "identity") + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), axis.text.x = element_text(angle = 90, vjust = 0.5))
 #There a couple of codes included in the whole code above
 [theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), axis.text.x = element_text(angle = 90, vjust = 0.5))] This scaled the bar graph to 90 degrees.
 #The last MAF class (0.495 - 0.505) was not included because the data also didn't present it.
 ```
-# The Pig MAF distribution was calculated following a similar pipeline as described above in detail
-# 1.Read the pedfile in SNP stats
 
+## The Pig MAF distribution was calculated following a similar pipeline as described above in detail 
+
+### 1.Read the pedfile in SNP stats 
 ```{r}
- New_Pig <- read.pedfile("Pig.0.05.ped", snps = "Pig.0.05.map")
+New_Pig <- read.pedfile("Pig.0.05.ped", snps = "Pig.0.05.map")
 ```
-# Extract SNP info in genotype object
 
+### Extract SNP info in genotype object 
 ```{r}
 New_Pig.genotypes <- New_Pig$genotypes
 dim(New_Pig.genotypes)
 [1]   120 43462
  write.table(New_Pig.genotypes, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/New_Pig.genotypes", sep="\t", col.names=F)
 ```
-# Calculate SNP statistics from col.summary() of snpstats
 
+### Calculate SNP statistics from col.summary() of snpstats 
 ```{r}
 New_Pig_snp_summary <- col.summary(New_Pig.genotypes)
 write.table(New_Pig_snp_summary, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/New_Pig_snp_summary.txt", sep="\t", col.names=T)
 ```
-# Subset only the MAF column and convert it to a data frame.
 
+### Subset only the MAF column and convert it to a data frame. 
 ```{r}
 New_pig_maf_class <- as.data.frame(New_Pig_snp_summary$MAF)
 View(New_pig_maf_class)
@@ -216,41 +221,43 @@ summary(New_pig_maf_class)
  3rd Qu.:0.391667       
  Max.   :0.500000
 ```
-# Setting the bins to calculate the MAF classes and estimate their relative frequencies
 
+### Setting the bins to calculate the MAF classes and estimate their relative frequencies 
 ```{r}
 br = seq(0.005,0.505,by=0.01)
 ranges = paste(head(br,-1), br[-1], sep=" - ")
 freq = hist(New_pig_maf_class$`New_Pig_snp_summary$MAF`, breaks=br, include.lowest=TRUE, plot=FALSE )
 New_MAF_Pig = data.frame(range=ranges, frequency = freq$counts)
 ```
-# Calculating relative frequency of each MAF class relative to total SNPs in the dataset
 
+### Calculating relative frequency of each MAF class relative to total SNPs in the dataset 
 ```{r}
 # Using the dplyer library function to add another column (Relative frequency) by mutating
- New_MAF_Pig.df <-tbl_df(New_MAF_Pig)
+New_MAF_Pig.df <-tbl_df(New_MAF_Pig)
 New_MAF_Pig.df <- mutate(New_MAF_Pig.df, Relative_frequency = frequency/43462)
 write.table(New_MAF_Pig.df, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/New_MAF_Pig.df.txt", sep="\t", col.names=T, row.names=F)
 ```
-# Plotting the MAF class distribution in the Pig dataset
 
+### Plotting the MAF class distribution in the Pig dataset 
 ```{r}
 ggplot(data = New_MAF_Pig.df[-50,], aes(x=range, y=Relative_frequency)) + geom_bar(stat = "identity") + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), axis.text.x = element_text(angle = 90, vjust = 0.5))
+
 #The last MAF class (0.495 - 0.505) was not included because the data also didn't present it.
 ```
-# Boar_MAF_Class minus the 09 hybrids that had introgressed SNPs from the Pig
 
+## Boar_MAF_Class minus the 09 hybrids that had introgressed SNPs from the Pig 
 ```{}
 We had trouble identifying the 09 hybrids that had introgressed snps and after struggling for a while we looked at their supplementary info and extracted their individual IDs.
 We applied R_functions to remove them from the Boar_data set
 ```
-# Identifying the 09 hybrids and assigning them to a file
+
+### Identifying the 09 hybrids and assigning them to a file 
 ```{r}
 Hybrids <- c("HAPMAP2_box5_G9_SSWB21U63","HAPMAP2_box5_H10_SSWB21U72","HAPmap5_box5_F7_SSWB22F06","HAPmap5_box5_B8_SSWB22F07","HAPmap5_box5_B9_SSWB22F08","HAPmap5_box5_H8_SSWB22M07","HAPmap5_box5_F9_SSWB41F02","HAPmap5_box5_D9_SSWB41M05", "HAPmap5_box5_D8_SSWB41U31")
 write.csv(Hybrids, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/Hybrids.csv", row.names=F)
 ```
-# Removing the 09 hybrids from the boar data set using [!]
 
+### Removing the 09 hybrids from the boar data set using [!] 
 ```{r}
 rownames(New_Boar.genotypes) #The common column for the two datasets
 N.Boar_No_hybrids <- New_Boar.genotypes[!rownames(New_Boar.genotypes) %in% Hybrids]
@@ -259,23 +266,24 @@ dim(N.Boar_No_hybrids)
 # Using the exclusive(!) command, I succeeded removing the 09 introgressed hybrids from the boar dataset. Out of the 88 boars, we remained with 79 individuals with 42157 SNPs
 # The returned output was already an object and therefore could easily go ahead and calculate the SNP statistics using the col.summary() package of snpStats
 ```
-# Calculate SNP statistics from col.summary() of snpstats
 
+### Calculate SNP statistics from col.summary() of snpstats 
 ```{r}
 N.Boar_No_hybrids_summary <- col.summary(N.Boar_No_hybrids)
 write.table(N.Boar_No_hybrids_summary, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/N.Boar_No_hybrids_summary.txt", sep="\t", col.names=T, row.names=F)
 ```
-# Subset only the MAF column and convert it to a data frame.
+
+### Subset only the MAF column and convert it to a data frame. 
 ```{r}
 N.Boar_No_maf_class <- as.data.frame(N.Boar_No_hybrids_summary$MAF)
 ```
-# Setting missing MAF to NA’s and then omit them
 
+### Setting missing MAF to NA’s and then omit them 
 ```{r}
-N.Boar_No_maf_class[N.Boar_No_maf_class==0] <- NA
+N.Boar_No_maf_class[N.Boar_No_maf_class==0] <-NA
 N.Boar_No_maf_class <- na.omit(N.Boar_No_maf_class)
 summary(N.Boar_No_maf_class)
- N.Boar_No_hybrids_summary$MAF
+N.Boar_No_hybrids_summary$MAF
  Min.   :0.006329             
  1st Qu.:0.050633             
  Median :0.198718             
@@ -283,43 +291,44 @@ summary(N.Boar_No_maf_class)
  3rd Qu.:0.354430             
  Max.   :0.500000 
 ```
-# Setting the bins to calculate the MAF classes and estimate their relative frequencies
 
+### Setting the bins to calculate the MAF classes and estimate their relative frequencies 
 ```{r}
 br = seq(0.005,0.505,by=0.01)
 ranges = paste(head(br,-1), br[-1], sep=" - ")
 freq = hist(N.Boar_No_maf_class$`N.Boar_No_hybrids_summary$MAF`, breaks=br, include.lowest=TRUE, plot=FALSE )
 N.Boar_MAF_Class <- data.frame(range=ranges, frequency = freq$counts)
 ```
-# Calculating relative frequency of each MAF class relative to total SNPs in the dataset
 
+### Calculating relative frequency of each MAF class relative to total SNPs in the dataset 
 ```{r}
 # Using the dplyer library function to add another column (Relative frequency) by mutating
- N_Boar_MAF_Class_df <- tbl_df(N.Boar_MAF_Class)
- N_Boar_MAF_Class_df <- mutate(N.Boar_MAF_Class, Relative_frequency =frequency/43642)
+N_Boar_MAF_Class_df <- tbl_df(N.Boar_MAF_Class)
+N_Boar_MAF_Class_df <- mutate(N.Boar_MAF_Class, Relative_frequency =frequency/43642)
 View(N_Boar_MAF_Class_df)
 write.table(N_Boar_MAF_Class_df, "/Users/ensamba/Group_project_emma/CrushedlikePiggy/N_Boar_MAF_Class_df.txt", sep="\t", col.names=T, row.names=F)
 ```
-# Plotting the MAF class distribution in the Boar dataset minus the 09 introgressed hybrids
-```{r}
+
+### Plotting the MAF class distribution in the Boar dataset minus the 09 introgressed hybrids 
+```{r} 
 ggplot(data = N_Boar_MAF_Class_df[-50,], aes(x=range, y=Relative_frequency)) + geom_bar(stat = "identity") + theme_bw() + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), axis.text.x = element_text(angle = 90, vjust = 0.5))
 #Note I removed the last bin because it was not included in the data
 ```
-# Working with the 09 introgressed SNPs to find the Rare SNPs in each and the observed heterozygosity using the adegenet software in R.
 
+## Working with the 09 introgressed SNPs to find the Rare SNPs in each and the observed heterozygosity using the adegenet software in R. 
 ```{r}
 library(adegenet)
 Hybrids <- c("HAPMAP2_box5_G9_SSWB21U63","HAPMAP2_box5_H10_SSWB21U72","HAPmap5_box5_F7_SSWB22F06","HAPmap5_box5_B8_SSWB22F07","HAPmap5_box5_B9_SSWB22F08","HAPmap5_box5_H8_SSWB22M07","HAPmap5_box5_F9_SSWB41F02","HAPmap5_box5_D9_SSWB41M05","HAPmap5_box5_D8_SSWB41U31")
 Boar_introgressed_pig <- subset(Boar_Filtered_Genotype, rownames(Boar_Filtered_Genotype) %in% Hybrids)
- dim(Boar_introgressed_pig)
+dim(Boar_introgressed_pig)
 [1]     9 28060
 ```
-# Convert a dataframe to a gemind object using library adegenet to estimate heterozygosity
 
+## Convert a dataframe to a gemind object using library adegenet to estimate heterozygosity 
 ```{r}
 # Two main classes of objects are used for storing genetic marker data, depending on the level at which the genetic information is considered: genind is used for individual genotypes, whereas genpop is used for alleles numbers counted by populations.
 # Genind objects
-These objects store genetic data at an individual level, plus various meta-data.
+# These objects store genetic data at an individual level, plus various meta-data.
 Boar_introgressed_pig_object <- df2genind(Boar_introgressed_pig, ploidy =4, sep = "")
 > View(Boar_introgressed_pig_object)
 /// GENIND OBJECT /////////
@@ -334,7 +343,4 @@ Boar_introgressed_pig_object <- df2genind(Boar_introgressed_pig, ploidy =4, sep 
    @ploidy: ploidy of each individual  (range: 4-4)
    @type:  codom
    @call: df2genind(X = Boar_introgressed_pig, sep = "", ploidy = 4)
-   
-```{r}
-```
-
+  # Unable to find rare snps for the 09 hybrids and so couldn't proceed from there
