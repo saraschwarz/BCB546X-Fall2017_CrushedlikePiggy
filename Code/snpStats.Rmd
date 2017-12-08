@@ -7,7 +7,18 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Install the required packages for the project
+# The following code allows to import .ped and .map files (plink filtered output files) into R. If this package provides many tools, our primary use here is to be able to read the files and save them as data frame for further analysis. 
+# This code also allows to subset the Pig and Broad data sets and merge them together.
+
+# http://www.bioconductor.org/packages/3.7/bioc/manuals/snpStats/man/snpStats.pdf
+
+# Set wWorking directory
+
+```{r}
+setwd("C:/PathToTheFiles")
+```
+
+## Install the required packages 
 
 ```{r}
 install.packages("devtools")
@@ -15,10 +26,6 @@ library("devtools")
 source("https://bioconductor.org/biocLite.R")
 biocLite()
 biocLite("snpStats")
-biocLite("gdsfmt")
-biocLite("SNPRelate")
-install.packages("ggplot2")
-install.packages("adegenet")
 ```
 
 ## Read newly filtered PED and MAP files from PLINK
