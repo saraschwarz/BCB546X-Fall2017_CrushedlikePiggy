@@ -1,5 +1,13 @@
+---
+title: "PCA"
+output: html_document
+---
 
-# The pupose of this script is to recreate the PCAs to visualize the boards, pigs, hybrids and PCA genetic structure on a figure. The authors chosed to run PCAs with a pearl script implemented in EIGENSOFT 3.0 (Price et al. 2006). As the pearl script didn't perform well, the documentation rare and as R users we chose to perform PCAs with the R package adegenet.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### The pupose of this script is to recreate the PCAs to visualize the boards, pigs, hybrids and PCA genetic structure on a figure. The authors chosed to run PCAs with a pearl script implemented in EIGENSOFT 3.0 (Price et al. 2006). As the pearl script didn't perform well, the documentation rare and as R users we chose to perform PCAs with the R package adegenet.
 
 ## Install the required packages 
 
@@ -9,8 +17,8 @@ install.packages("adegenet")
 
 ## Create a population information factor: 
 
-# A previous analysis on the SNPs board data done with STRUCTURE has identified 4 genetic cluster. These are indicated in the Boar_info.txt and will be helpfull to visualize the clusters on the PCA. 
-# We first create a factor will the PCA.cluster information from the Boar_info.txt file.
+### A previous analysis on the SNPs board data done with STRUCTURE has identified 4 genetic cluster. These are indicated in the Boar_info.txt and will be helpfull to visualize the clusters on the PCA. 
+### We first create a factor will the PCA.cluster information from the Boar_info.txt file.
 
 ```{r}
 pop_info <- read.table("Boar_info.txt", sep="\t", h=T, stringsAsFactors = F)
@@ -19,7 +27,7 @@ pop_info_pca <- pop_info$PCA.cluster
 View(pop_info_pca)
 ```
 
-# The second PCA coutains 9 pig genotypes added to the board data set. We will visualize and copy the population information factor and simply recreate a new one with 9 more values corresponding to a 5th cluster: the pigs from different breeds. This factor will be used later.
+### The second PCA coutains 9 pig genotypes added to the board data set. We will visualize and copy the population information factor and simply recreate a new one with 9 more values corresponding to a 5th cluster: the pigs from different breeds. This factor will be used later.
 
 ```{r}
 pop_info_pca # Visualize and copy the factor.
@@ -30,36 +38,36 @@ View(all_info_pca)
 
 ## PCA with adegenet:
 
-# We used the adegenet packages and used the codes proposed by Thibault Jombart from in the adegenet tutorial. (http://adegenet.r-forge.r-project.org/files/tutorial-basics.pdf)
-# To run the following code we need to have previously created an data.frame containing the SNP genotypes wanted (see snpStats.Rmd).
-# The PCA is performed using the Board data set with minor allele frequencies (MAF) inferior to 0.05 removed.
-# The first step is to convert the SNP data frame into a "genind" object. The ploidy (here n=2) and the coding format (here 1) need to be specified.
+### We used the adegenet packages and used the codes proposed by Thibault Jombart from in the adegenet tutorial. (http://adegenet.r-forge.r-project.org/files/tutorial-basics.pdf)
+### To run the following code we need to have previously created an data.frame containing the SNP genotypes wanted (see snpStats.Rmd).
+### The PCA is performed using the Board data set with minor allele frequencies (MAF) inferior to 0.05 removed.
+### The first step is to convert the SNP data frame into a "genind" object. The ploidy (here n=2) and the coding format (here 1) need to be specified.
 
 ```{r}
 library(adegenet)
 obj <- df2genind(board_filtered_0.05_genotypes, ploidy=2, ncode=1)
 ```
 
-# The following performs the PCA
-# The console will ask for how many axes to select. Since most of the variance is explained by the 4 first axes, we will enter "4".
+### The following performs the PCA
+### The console will ask for how many axes to select. Since most of the variance is explained by the 4 first axes, we will enter "4".
 
 ```{r}
 pca = dudi.pca(obj, center=TRUE, scale=FALSE)
 ```
 
-# Visualize the PCA
+### Visualize the PCA
 
 ```{r}
 s.label(pca$li)
 ```
 
-# This first figure is not very helpfull because of labels overlap but we can improve the figure.
+### This first figure is not very helpfull because of labels overlap but we can improve the figure.
 
 ```{r}
 s.class(pca$li, fac=pop_info_pca, col=funky(13))
 ```
 
-# A better visualization with:
+### A better visualization with:
 
 ```{r}
 s.class(pca$li, fac=pop_info_pca,
@@ -71,7 +79,7 @@ add.scatter.eig(pca$eig[1:50],3,1,2, ratio=.3)
 
 ## PCA including some pig genotypes
 
-# The SNPs data frame incluing some pig genotypes needs to be merged prior to run the following code. See snpStats.Rmd.
+### The SNPs data frame incluing some pig genotypes needs to be merged prior to run the following code. See snpStats.Rmd.
 
 ```{r}
 obj2 <- df2genind(all_genotypes, ploidy=2, ncode=1)
@@ -93,7 +101,7 @@ grp  <- find.clusters(obj_clust, max.n.clust = 50) # Finds the number of groups,
 dapc1 <- dapc(obj_clust, grp$grp) # Retain most of the PCA that explain the variance. Retain 4 discriminants.
 ```
 
-# Plot the DAPC
+### Plot the DAPC
 
 ```{r}
 myCol <- c("darkblue","purple","green","orange","red","blue")
@@ -102,18 +110,18 @@ scatter(dapc1, posi.da="bottomright", bg="white",
         posi.pca="bottomleft")
 ```
 
-# Improve the plot
+### Improve the plot
 
 ```{r}
 scatter(dapc1, scree.da=FALSE, bg="white", pch=20, cell=0, cstar=0, col=myCol, solid=.4,
         cex=3,clab=0, leg=TRUE, txt.leg=paste("Cluster",1:6))
 ```
 
-# Plot which individual is assigned to which cluster
+### Plot which individual is assigned to which cluster
 
 ```{r}
 assignplot(dapc1)
 ```
 
-# By changing the cluster number we still get 10 individuals that are genetically different from the Wild Board cluster. We identified 1 "hybrid" in the main cluster suggesting that it is not very different from the wild boards (thus may be not a hybrid) and 2 more individuals that might be concidered as hybrids. Be concider that their methods that is "analyzing" the SNPs loci separately and finding the rare allele in only 9 individuals lakes information and might be not really robust.
+### By changing the cluster number we still get 10 individuals that are genetically different from the Wild Board cluster. We identified 1 "hybrid" in the main cluster suggesting that it is not very different from the wild boards (thus may be not a hybrid) and 2 more individuals that might be concidered as hybrids. Be concider that their methods that is "analyzing" the SNPs loci separately and finding the rare allele in only 9 individuals lakes information and might be not really robust.
 

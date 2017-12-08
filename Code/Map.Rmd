@@ -16,14 +16,14 @@ install.packages("ggrepel")
 
 ## Create a pop coordinates object
 
-# The Boar_info.txt file was NOT providing any geographic locations but only town or park names. We got the spatial coordinates from these locations with google map.
+### The Boar_info.txt file was NOT providing any geographic locations but only town or park names. We got the spatial coordinates from these locations with google map.
 
 ```{r}
 pop_coor <- read.table("Boar_info_coor.txt", sep="\t", h=T, stringsAsFactors = F)
 View(pop_coor)
 ```
 
-# The following code allows to plot the sample locations on a Google Map. First let's set the parameters for the map: loc is the geolocation where the map will be centered (here it is the average of the latitudes and longitudes with latitute - 0.5 because of few samples far south), zoom is the value of zoom and maptype one of the four map options provided by Google.
+### The following code allows to plot the sample locations on a Google Map. First let's set the parameters for the map: loc is the geolocation where the map will be centered (here it is the average of the latitudes and longitudes with latitute - 0.5 because of few samples far south), zoom is the value of zoom and maptype one of the four map options provided by Google.
 
 ```{r}
 library(ggmap)
@@ -37,14 +37,14 @@ maptype <-"hybrid"
 #maptype <-"roadmap"
 ```
 
-# Then we download the map and plot it with the element from the data table we want (here the samples locations and the cluster column).
+### Then we download the map and plot it with the element from the data table we want (here the samples locations and the cluster column).
 
 ```{r}
 map <- get_map(location = loc, zoom = zoom, maptype = maptype)
 ggmap(map) + geom_point(data = pop_coor, aes(long, lat, colour = factor(clusters)), size=5)
 ```
 
-# Next we plot the names of the hybrids only and let's add some labels.
+### Next we plot the names of the hybrids only and let's add some labels.
 
 ```{r}
 library(ggrepel)
