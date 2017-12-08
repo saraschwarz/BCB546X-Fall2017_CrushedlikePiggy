@@ -41,7 +41,7 @@ snpsummary <- col.summary(Boar0.005$genotypes)
 ## Create data frame, rewrite as .csv to avoid RAW files, and reload into R
 
 ```{r}
-test <- data.frame(Boar0.05_genotypes)
+test <- data.frame(Boar0.005_genotypes)
 
 write.csv(test, "testfile.csv", row.names = F)
 test2 <- read.csv("testfile.csv")
