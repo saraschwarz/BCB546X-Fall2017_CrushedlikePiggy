@@ -1,4 +1,4 @@
-#Packages 
+# Packages 
 ```{r}
 library(ggplot2)
 library(snpStats)
