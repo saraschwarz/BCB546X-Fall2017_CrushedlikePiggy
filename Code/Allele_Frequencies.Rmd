@@ -102,7 +102,14 @@ Total genotyping rate is 0.986513.
 17660 variants removed due to minor allele threshold(s)
 28060 variants and 88 people pass filters and QC.
 #This returned .map and .ped files which we imported in R for analysis.
-```
+````
+
+### To generate MAF distribution for all the three datasets, they applied a filter with 0.005 MAF as the minimum.
+```{}
+$ plink --ped DG_Boar.ped --map DG_Boar.map --maf 0.005 --recode --out Boar.0.05
+$ plink --ped DG_Pig.ped --map DG_Pig.map --maf 0.005 --recode --out Pig.0.05
+#Found this after failing to replicate the graphs.
+````
 
 ### Transfer files from remote host to be read in R for analysis. We applied the scp -r command 
 ```{}
