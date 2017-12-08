@@ -1,0 +1,234 @@
+---
+title: "Determining Rare Alleles and SNP Positions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install the required packages for the project
+
+```{r}
+install.packages("devtools")
+library("devtools")
+source("https://bioconductor.org/biocLite.R")
+biocLite()
+biocLite("snpStats")
+biocLite("gdsfmt")
+biocLite("SNPRelate")
+install.packages("ggplot2")
+install.packages("adegenet")
+library(snpStats)
+library(plyr)
+```
+
+## Read newly filtered PED and MAP files from PLINK
+
+```{r}
+Boar0.005 <- read.pedfile("Board.filtered.0.005.ped", snps="Board.filtered.0.005.map")
+Boar0.005_genotypes <- as.data.frame(board_filtered_0.005$genotypes)
+Boar0.05 <- read.pedfile("Board.filtered.0.05.ped", snps="Board.filtered.0.05.map")
+Boar0.05_genotypes <- as.data.frame(board_filtered_0.05$genotypes)
+```
+
+## Create summary of SNPs for interpretation of data
+
+```{r}
+snpsummary <- col.summary(Boar0.005$genotypes)
+```
+
+## Create data frame, rewrite as .csv to avoid RAW files, and reload into R
+
+```{r}
+test <- data.frame(Boar0.05_genotypes)
+
+write.csv(test, "testfile.csv", row.names = F)
+test2 <- read.csv("testfile.csv")
+str(test2)
+
+```
+
+# Re-name
+
+```{r}
+fulldata <- test2
+```
+
+# Get an individual ID column
+
+```{r}
+fulldata$Individual.ID <- row.names(fulldata)
+```
+
+# Make a long format dataframe where individual is replicated
+  ## column 1: individual
+  ## column 2: SNP ID
+  ## column 3: allelic information for that combo of individual and SNP
+  
+```{r}
+data.long <- gather(fulldata, key = "SNP.ID", value = "Allele.Frequency", colnames(fulldata[,-ncol(fulldata)]))
+```
+
+# Check the dimensions and structure, there should be many more rows than there are columns
+
+```{r}
+dim(fulldata)
+dim(data.long)
+str(data.long)
+
+data.long2 <- data.long[,-1]
+```
+
+# Create dataframe for summary of frequencies
+
+```{r}
+data.frequency <- data.frame(table(data.long2))
+```
+
+# Remove values for no data & heterozygosity
+
+```{r}
+data.freq2 <- subset(data.frequency, data.frequency$Allele.Frequency != "0" & data.frequency$Allele.Frequency != "2")
+sort(unique(data.frequency$Allele.Frequency))
+sort(unique(data.freq2$Allele.Frequency))
+```
+
+# Go back to wide format to easily assess within-SNP allele differences
+
+```{r}
+data.wide <- spread(data.freq2, SNP.ID, Freq, fill = NA)
+```
+
+# Drop allele ID for this next step, will replace
+
+```{r}
+data.wide2 <- data.wide[,-1]
+```
+
+# Assess the frequency of each allele, "01" will be labeled as TRUE and "03" labeled as FALSE
+
+```{r}
+rarity <- as.vector(data.wide2[1,] > data.wide2[2,])
+```
+
+# Create empty file to receive the allele frequency
+
+```{r}
+SNP.names <- colnames(data.wide[,-1])
+allele.rare <- data.frame(SNP.names, rarity)
+```
+
+# Rename to determine which allele was more rare
+
+```{r}
+allele.rare$rarity <- gsub("TRUE", "03", allele.rare$rarity)
+allele.rare$rarity <- gsub("FALSE", "01", allele.rare$rarity)
+
+View(allele.rare)
+```
+
+# Separate out hybrid genotypes for comparison of rare alleles
+
+```{r}
+hybrids <- c("HAPMAP2_box5_G9_SSWB21U63","HAPmap5_box5_F7_SSWB22F06","HAPmap5_box5_B8_SSWB22F07","HAPmap5_box5_D9_SSWB41M05")
+hyb_genotypes <- subset(Boar0.05_genotypes, rownames(Boar0.05_genotypes) %in% hybrids)
+
+hyb1 <- hyb_genotypes["HAPMAP2_box5_G9_SSWB21U63", ]
+hyb2 <- hyb_genotypes["HAPmap5_box5_B8_SSWB22F07", ]
+hyb5 <- hyb_genotypes["HAPmap5_box5_F7_SSWB22F06", ]
+hyb7 <- hyb_genotypes["HAPmap5_box5_D9_SSWB41M05", ]
+```
+
+# Transpose hybrid genotypes so that they can be merged with rare alleles
+
+```{r}
+thyb1 <- t(hyb1)
+thyb2 <- t(hyb2)
+thyb5 <- t(hyb5)
+thyb7 <- t(hyb7)
+
+View(thyb1)
+```
+
+# Combine rare alleles with hybrid
+
+```{r}
+rare.hyb1 <- cbind(thyb1, allele.rare)
+rare.hyb1 <- rare.hyb1[ , c("HAPMAP2_box5_G9_SSWB21U63","rarity")]
+
+
+rare.hyb2 <- cbind(thyb2, allele.rare)
+rare.hyb2 <- rare.hyb2[ , c("HAPmap5_box5_B8_SSWB22F07","rarity")]
+
+rare.hyb5 <- cbind(thyb5, allele.rare)
+rare.hyb5 <- rare.hyb5[ , c("HAPmap5_box5_F7_SSWB22F06","rarity")]
+
+rare.hyb7 <- cbind(thyb7, allele.rare)
+rare.hyb7 <- rare.hyb7[ , c("HAPmap5_box5_D9_SSWB41M05","rarity")]
+```
+
+# Assess whether hybrid alleles are equal to rare alleles
+
+```{r}
+rarity.hyb1 <- as.vector(rare.hyb1[,1] == rare.hyb1[,2])
+rarity.hyb2 <- as.vector(rare.hyb2[,1] == rare.hyb2[,2])
+rarity.hyb5 <- as.vector(rare.hyb5[,1] == rare.hyb5[,2])
+rarity.hyb7 <- as.vector(rare.hyb7[,1] == rare.hyb7[,2])
+```
+
+# Create file to add rare hybrid alleles
+
+```{r}
+allele.hyb1 <- data.frame(SNP.names, rarity.hyb1)
+allele.hyb2 <- data.frame(SNP.names, rarity.hyb2)
+allele.hyb5 <- data.frame(SNP.names, rarity.hyb5)
+allele.hyb7 <- data.frame(SNP.names, rarity.hyb7)
+```
+
+# Remove all FALSE alleles
+
+```{r}
+rareallele.hyb1 <- allele.hyb1[!(rarity.hyb1 == "FALSE"),]
+rareallele.hyb2 <- allele.hyb2[!(rarity.hyb2 == "FALSE"),]
+rareallele.hyb5 <- allele.hyb5[!(rarity.hyb5 == "FALSE"),]
+rareallele.hyb7 <- allele.hyb7[!(rarity.hyb7 == "FALSE"),]
+```
+
+# Create file with map information of SNPs
+
+```{r}
+Boar <- read.pedfile("DG_Boar.ped", snps="DG_Boar.map")
+SNPs<- as.data.frame(Boar$map)
+```
+
+# Combine SNP maps and hybrid alleles
+
+```{r}
+map.hyb1 <- SNPs[match(rareallele.hyb1$SNP.names, SNPs$snp.names), ]
+map.hyb2 <- SNPs[match(rareallele.hyb2$SNP.names, SNPs$snp.names), ]
+map.hyb5 <- SNPs[match(rareallele.hyb5$SNP.names, SNPs$snp.names), ]
+map.hyb7 <- SNPs[match(rareallele.hyb7$SNP.names, SNPs$snp.names), ]
+```
+
+# Plot SNP Positions per chromosome
+
+```{r}
+SNP.pos.hyb1 <- ggplot(data=map.hyb1, aes(y=map.hyb1$V1, x=map.hyb1$V4, group=map.hyb1$V1)) +
+  geom_point(shape = 3) + labs(title = "Individual 1", x = "SNP Position on Chromosome", y = "Chromosome")
+
+SNP.pos.hyb2 <- ggplot(data=map.hyb2, aes(y=map.hyb2$V1, x=map.hyb2$V4, group=map.hyb2$V1)) +
+  geom_point(shape = 3) + labs(title = "Individual 2", x = "SNP Position on Chromosome", y = "Chromosome")
+
+SNP.pos.hyb5 <- ggplot(data=map.hyb5, aes(y=map.hyb5$V1, x=map.hyb5$V4, group=map.hyb5$V1)) +
+  geom_point(shape = 3) + labs(title = "Individual 5", x = "SNP Position on Chromosome", y = "Chromosome")
+
+SNP.pos.hyb7 <- ggplot(data=map.hyb7, aes(y=map.hyb7$V1, x=map.hyb7$V4, group=map.hyb7$V1)) +
+  geom_point(shape = 3) + labs(title = "Individual 7", x = "SNP Position on Chromosome", y = "Chromosome")
+
+SNP.pos.hyb1
+SNP.pos.hyb2
+SNP.pos.hyb5
+SNP.pos.hyb7
+```
+

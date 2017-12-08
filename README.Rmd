@@ -1,16 +1,16 @@
 # Crushed Like Piggy Repository 
+## Sara Schwarz, Aimee Schulz, Finn Piatscheck, Emmanuel Nsamba
 ## Geodbloed_et_al-2012
   * Outline of selected paper and analysis conducted
   
-## Code 
+## Code
   * README - summarizes contents of folder
-  * Data inspection code
-    * Data_Inspection
-  * Plink bash script - code to run Plink
-  * Allele_Frequencies - Minor allele frequency (MAF) distribution of wild boar data set, wild boar data set without the 9 hybrids, and the domestic pig data set.
-  * PCA_Analysis - Principal component analysis (PCA) plot based on filtered boar data set. The second PCA includes a sample of all six domestic pig breeds.
-  * Cluster_Map - Map of clustered wild boar individuals.
-  * SNP_Positions - Chromosome positions of introgressed SNPs across 4 different levels of hybridization.
+  * Data_Inspection - code to inspect raw data files
+  * snpStats - *******
+  * Allele_Frequencies - Minor allele frequency (MAF) distribution of wild boar data set, wild boar data set without the 9 hybrids, and the domestic pig data set
+  * PCA - Principal component analysis (PCA) plot based on filtered boar data set. The second PCA includes a sample of all six domestic pig breeds
+  * Map - Map of clustered wild boar individuals
+  * SNP_Positions - Chromosome positions of introgressed SNPs across 4 different levels of hybridization
   
 ## Data
   * README - summarizes contents of folder
