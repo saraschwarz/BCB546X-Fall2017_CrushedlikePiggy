@@ -1,4 +1,6 @@
-# Packages 
+
+## Packages
+
 ```{r}
 library(ggplot2)
 library(snpStats)
@@ -12,7 +14,7 @@ library(SNPRelate)
 ```
 # Loading and reading in the data. We read this data onto hpc class which had the plink module we were to use for downstream analysis.
 
-```{}
+```{r}
 $ wget http://datadryad.org/bitstream/handle/10255/dryad.39555/DG_Pig.ped
 $ wget http://datadryad.org/bitstream/handle/10255/dryad.39556/DG_Pig.map 
 $ wget http://datadryad.org/bitstream/handle/10255/dryad.39556/DG_Boar.map 
