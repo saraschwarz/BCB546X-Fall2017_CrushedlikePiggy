@@ -1,4 +1,4 @@
-# Contents of data folder
+# Raw data 
   
 ## Information text file for boar and pig
   * Boar_info.txt

@@ -5,8 +5,9 @@
   
 ## Code
   * README - summarizes contents of folder
+  * plink.sh - bash script file to run plink
   * Data_Inspection - code to inspect raw data files
-  * snpStats - *******
+  * snpStats - Reads .ped files from plink 
   * Allele_Frequencies - Minor allele frequency (MAF) distribution of wild boar data set, wild boar data set without the 9 hybrids, and the domestic pig data set
   * PCA - Principal component analysis (PCA) plot based on filtered boar data set. The second PCA includes a sample of all six domestic pig breeds
   * Map - Map of clustered wild boar individuals
