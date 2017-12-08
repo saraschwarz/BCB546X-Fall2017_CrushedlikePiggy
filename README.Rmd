@@ -5,7 +5,7 @@
   * Finn Piatscheck - Plink filtering, DAPC analysis, PCA analysis, generation of map
   * Emmanuel Nsamba - Plink filtering and creation of allele frequency figures
 
-## Files and folders contained in this repository
+# Files and folders contained in this repository
 ## Geodbloed_et_al-2012
   * Outline of selected paper and analysis conducted
   
