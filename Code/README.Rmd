@@ -1,9 +1,11 @@
-# Code documentation should be run in the order as follows:
-  1. Data_Inspection
-  2. Plink
-  3. Allele_Frequncies
-  4. PCA_Analysis
-  5. Cluster_Map
-  6. SNP_Positions
-
+# This folder contains code documentation that can be used to run analyses outlined in the selected paper.
+## Code documentation should be run in the order as follows:
+  1. Data_Inspection - inspects raw data raws used for analysis
+  2. plink.sh - bash file for PLINK operation
+  3. snpStats - reading .ped files into R
+  4. Allele_Frequncies - generation of allele frequency figures
+  5. PCA - identification of hybrids (DAPC) and PCA analysis
+  6. Map - generation of map with individuals assigned to each population
+  7. SNP_Positions - generation of introgressed SNP position figures
+ 
   

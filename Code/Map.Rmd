@@ -1,11 +1,3 @@
----
-title: "Map"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # The following code provide information to recreate a map with sample locations and any other kind of variables on a Google Map.
 

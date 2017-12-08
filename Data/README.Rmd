@@ -1,4 +1,4 @@
-# Contents of data folder
+# This folder contains the raw data from the selected paper. The data was downloaded from the Dryad repository and must be imported into PLINK and filtered before further analysis can be run. 
   
 ## Information text file for boar and pig
   * Boar_info.txt

@@ -1,18 +1,25 @@
 # Crushed Like Piggy Repository 
-## Sara Schwarz, Aimee Schulz, Finn Piatscheck, Emmanuel Nsamba
+## Work Flow of our project
+  * Sara Schwarz - Github repository creation and management, data inspection code, intitial creation of presentation slides
+  * Aimee Schulz - Generation of chromosome SNP position figure
+  * Finn Piatscheck - Plink filtering, DAPC analysis, PCA analysis, generation of map
+  * Emmanuel Nsamba - Plink filtering and creation of allele frequency figures
+
+# Files and folders contained in this repository
 ## Geodbloed_et_al-2012
   * Outline of selected paper and analysis conducted
   
-## Code
+## Code Folder
   * README - summarizes contents of folder
+  * plink.sh - bash script file to run plink
   * Data_Inspection - code to inspect raw data files
-  * snpStats - *******
+  * snpStats - Reads .ped files from plink 
   * Allele_Frequencies - Minor allele frequency (MAF) distribution of wild boar data set, wild boar data set without the 9 hybrids, and the domestic pig data set
-  * PCA - Principal component analysis (PCA) plot based on filtered boar data set. The second PCA includes a sample of all six domestic pig breeds
+  * PCA - DAPC analysis to determine hybrids. Principal component analysis (PCA) plot based on filtered boar data set. The second PCA includes a sample of all six domestic pig breeds
   * Map - Map of clustered wild boar individuals
   * SNP_Positions - Chromosome positions of introgressed SNPs across 4 different levels of hybridization
   
-## Data
+## Data Folder
   * README - summarizes contents of folder
   * Information text file for boar and pig data
     * Boar_info.txt

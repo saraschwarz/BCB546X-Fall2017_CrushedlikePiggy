@@ -41,7 +41,7 @@ snpsummary <- col.summary(Boar0.005$genotypes)
 ## Create data frame, rewrite as .csv to avoid RAW files, and reload into R
 
 ```{r}
-test <- data.frame(Boar0.05_genotypes)
+test <- data.frame(Boar0.005_genotypes)
 
 write.csv(test, "testfile.csv", row.names = F)
 test2 <- read.csv("testfile.csv")
@@ -215,8 +215,8 @@ map.hyb7 <- SNPs[match(rareallele.hyb7$SNP.names, SNPs$snp.names), ]
 
 ```{r}
 SNP.pos.hyb1 <- ggplot(data=map.hyb1, aes(y=map.hyb1$V1, x=map.hyb1$V4, group=map.hyb1$V1)) +
-  geom_point(shape = 3) + labs(title = "Individual 1", x = "SNP Position on Chromosome", y = "Chromosome")
-
+  geom_point(shape = 3) + labs(title = "Individual 1", x = "SNP Position on Chromosome", y = "Chromosome") 
+                                                                                                                          
 SNP.pos.hyb2 <- ggplot(data=map.hyb2, aes(y=map.hyb2$V1, x=map.hyb2$V4, group=map.hyb2$V1)) +
   geom_point(shape = 3) + labs(title = "Individual 2", x = "SNP Position on Chromosome", y = "Chromosome")
 
@@ -226,9 +226,17 @@ SNP.pos.hyb5 <- ggplot(data=map.hyb5, aes(y=map.hyb5$V1, x=map.hyb5$V4, group=ma
 SNP.pos.hyb7 <- ggplot(data=map.hyb7, aes(y=map.hyb7$V1, x=map.hyb7$V4, group=map.hyb7$V1)) +
   geom_point(shape = 3) + labs(title = "Individual 7", x = "SNP Position on Chromosome", y = "Chromosome")
 
-SNP.pos.hyb1
-SNP.pos.hyb2
-SNP.pos.hyb5
-SNP.pos.hyb7
+# Add line segments for the length of each chromosome, calculated by looking at the maximum SNP position for each chromosome
+
+FinalHyb1 <- SNP.pos.hyb1 + geom_segment(aes(x = 0, y = 1, xend = 291089408, yend = 1)) + geom_segment(aes(x = 0, y = 2, xend = 127359819, yend = 2)) + geom_segment(aes(x = 0, y = 3, xend = 120800117, yend = 3)) + geom_segment(aes(x = 0, y = 4, xend = 135532268, yend = 4)) + geom_segment(aes(x = 0, y = 5, xend = 97979521, yend = 5)) + geom_segment(aes(x = 0, y = 6, xend = 119595567, yend = 6)) + geom_segment(aes(x = 0, y = 7, xend = 134207146, yend = 7)) + geom_segment(aes(x = 0, y = 8, xend = 118571475, yend = 8)) + geom_segment(aes(x = 0, y = 9, xend = 126827438, yend = 9)) + geom_segment(aes(x = 0, y = 10, xend = 59147499, yend = 10)) + geom_segment(aes(x = 0, y = 11, xend = 75912424, yend = 11)) + geom_segment(aes(x = 0, y = 12, xend = 56860010, yend = 12)) + geom_segment(aes(x = 0, y = 13, xend = 135782088, yend = 13)) + geom_segment(aes(x = 0, y = 14, xend = 147739727, yend = 14)) + geom_segment(aes(x = 0, y = 15, xend = 126949310, yend = 15)) + geom_segment(aes(x = 0, y = 16, xend = 73316248, yend = 16)) + geom_segment(aes(x = 0, y = 17, xend = 64100416, yend = 17)) + geom_segment(aes(x = 0, y = 18, xend = 64100416, yend = 18))
+FinalHyb2 <- SNP.pos.hyb2 + geom_segment(aes(x = 0, y = 1, xend = 291089408, yend = 1)) + geom_segment(aes(x = 0, y = 2, xend = 127359819, yend = 2)) + geom_segment(aes(x = 0, y = 3, xend = 120800117, yend = 3)) + geom_segment(aes(x = 0, y = 4, xend = 135532268, yend = 4)) + geom_segment(aes(x = 0, y = 5, xend = 97979521, yend = 5)) + geom_segment(aes(x = 0, y = 6, xend = 119595567, yend = 6)) + geom_segment(aes(x = 0, y = 7, xend = 134207146, yend = 7)) + geom_segment(aes(x = 0, y = 8, xend = 118571475, yend = 8)) + geom_segment(aes(x = 0, y = 9, xend = 126827438, yend = 9)) + geom_segment(aes(x = 0, y = 10, xend = 59147499, yend = 10)) + geom_segment(aes(x = 0, y = 11, xend = 75912424, yend = 11)) + geom_segment(aes(x = 0, y = 12, xend = 56860010, yend = 12)) + geom_segment(aes(x = 0, y = 13, xend = 135782088, yend = 13)) + geom_segment(aes(x = 0, y = 14, xend = 147739727, yend = 14)) + geom_segment(aes(x = 0, y = 15, xend = 126949310, yend = 15)) + geom_segment(aes(x = 0, y = 16, xend = 73316248, yend = 16)) + geom_segment(aes(x = 0, y = 17, xend = 64100416, yend = 17)) + geom_segment(aes(x = 0, y = 18, xend = 64100416, yend = 18))
+FinalHYb5 <- SNP.pos.hyb5 + geom_segment(aes(x = 0, y = 1, xend = 291089408, yend = 1)) + geom_segment(aes(x = 0, y = 2, xend = 127359819, yend = 2)) + geom_segment(aes(x = 0, y = 3, xend = 120800117, yend = 3)) + geom_segment(aes(x = 0, y = 4, xend = 135532268, yend = 4)) + geom_segment(aes(x = 0, y = 5, xend = 97979521, yend = 5)) + geom_segment(aes(x = 0, y = 6, xend = 119595567, yend = 6)) + geom_segment(aes(x = 0, y = 7, xend = 134207146, yend = 7)) + geom_segment(aes(x = 0, y = 8, xend = 118571475, yend = 8)) + geom_segment(aes(x = 0, y = 9, xend = 126827438, yend = 9)) + geom_segment(aes(x = 0, y = 10, xend = 59147499, yend = 10)) + geom_segment(aes(x = 0, y = 11, xend = 75912424, yend = 11)) + geom_segment(aes(x = 0, y = 12, xend = 56860010, yend = 12)) + geom_segment(aes(x = 0, y = 13, xend = 135782088, yend = 13)) + geom_segment(aes(x = 0, y = 14, xend = 147739727, yend = 14)) + geom_segment(aes(x = 0, y = 15, xend = 126949310, yend = 15)) + geom_segment(aes(x = 0, y = 16, xend = 73316248, yend = 16)) + geom_segment(aes(x = 0, y = 17, xend = 64100416, yend = 17)) + geom_segment(aes(x = 0, y = 18, xend = 64100416, yend = 18))
+FinalHyb7 <- SNP.pos.hyb7 + geom_segment(aes(x = 0, y = 1, xend = 291089408, yend = 1)) + geom_segment(aes(x = 0, y = 2, xend = 127359819, yend = 2)) + geom_segment(aes(x = 0, y = 3, xend = 120800117, yend = 3)) + geom_segment(aes(x = 0, y = 4, xend = 135532268, yend = 4)) + geom_segment(aes(x = 0, y = 5, xend = 97979521, yend = 5)) + geom_segment(aes(x = 0, y = 6, xend = 119595567, yend = 6)) + geom_segment(aes(x = 0, y = 7, xend = 134207146, yend = 7)) + geom_segment(aes(x = 0, y = 8, xend = 118571475, yend = 8)) + geom_segment(aes(x = 0, y = 9, xend = 126827438, yend = 9)) + geom_segment(aes(x = 0, y = 10, xend = 59147499, yend = 10)) + geom_segment(aes(x = 0, y = 11, xend = 75912424, yend = 11)) + geom_segment(aes(x = 0, y = 12, xend = 56860010, yend = 12)) + geom_segment(aes(x = 0, y = 13, xend = 135782088, yend = 13)) + geom_segment(aes(x = 0, y = 14, xend = 147739727, yend = 14)) + geom_segment(aes(x = 0, y = 15, xend = 126949310, yend = 15)) + geom_segment(aes(x = 0, y = 16, xend = 73316248, yend = 16)) + geom_segment(aes(x = 0, y = 17, xend = 64100416, yend = 17)) + geom_segment(aes(x = 0, y = 18, xend = 64100416, yend = 18))
+
+FinalHyb1
+FinalHyb2
+FinalHYb5
+FinalHyb7
+
 ```
 
