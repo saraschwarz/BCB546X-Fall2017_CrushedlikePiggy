@@ -1,0 +1,43 @@
+---
+title: "Map"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Set wWorking directory
+
+```{r}
+setwd("C:/Users/finnp/Desktop/Final project")
+```
+
+## Create a pop coordinates object
+
+```{r}
+pop_coor <- read.table("Boar_info_coor.txt", sep="\t", h=T, stringsAsFactors = F)
+View(pop_coor)
+```
+
+```{r}
+library(ggmap)
+
+loc <- apply(pop_coor[, 10:9], 2, mean)
+loc[2]  <- loc[2] - 0.5
+zoom <- 7
+maptype <-"terrain"
+
+map <- get_map(location = loc, zoom = zoom, maptype = maptype)
+ggmap(map) + geom_point(data = pop_coor, aes(long, lat, colour = factor(clusters)), size=5)
+```
+
+```{r}
+library(ggrepel)
+ggmap(map) + geom_point(data = pop_coor, aes(long, lat, colour = factor(clusters)), size=5) +
+                  labs(main = "Board Samples Geographic Distribution", x = 'Longitude', y = 'Latitude') +
+                  geom_label_repel(data = subset(pop_coor, PCA.cluster %in% c("hyb1", "hyb2", "hyb3", "hyb4", "hyb5", "hyb6", "hyb7", "hyb8", "hyb9")), aes(x = long, y = lat, label = PCA.cluster), 
+                  fill = "white", box.padding = unit(.4, "lines"),
+                  label.padding = unit(.15, "lines"),
+                  segment.color = "grey", segment.size = 1)
+```
